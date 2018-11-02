@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-"""
-Clase (y programa principal) para un servidor de eco en UDP simple
-"""
+
+"""Servidor UDP con handle de registro."""
 
 import socketserver
 import sys
@@ -18,11 +17,13 @@ Time = '%Y-%m-%d %H:%M:%S'
 
 
 class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
+    """SIP Register and .json file."""  
+    
     List = []
     Users = {}
 
     def json2registered(self):
-
+        """If registered.json exist."""
         try:
             with open("registered.json", "r") as jsonfile:
                 self.Users = json.load(jsonfile)
@@ -32,11 +33,12 @@ class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
             pass
 
     def register2_json(self):
-
+        """registered.json file."""
         with open("registered.json", "w") as jsonfile:
             json.dump(self.Users, jsonfile, indent=3)
 
     def handle(self):
+        """Request handled in this method."""
         self.json2registered()
         IP = self.client_address[0]
         PORT = self.client_address[1]
