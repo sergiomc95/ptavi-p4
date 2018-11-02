@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""Programa cliente UDP que abre un socket a un servidor"""
+"""Programa cliente UDP que abre un socket a un servidor."""
 
 import socket
 import sys
@@ -21,7 +21,7 @@ try:
 
 except IndexError:
     sys.exit(" Usage: python3 client.py IP Port register Mail exp_value")
-"""Creamos el socket, lo configuramos y lo atamos a un servidor/puerto"""
+"""Creamos el socket, lo configuramos y lo atamos a un servidor/puerto."""
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
 
     my_socket.connect((IP, PORT))
