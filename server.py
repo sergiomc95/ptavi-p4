@@ -18,25 +18,32 @@ class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
     def handle(self):
         IP = self.client_address[0]
         PORT = self.client_address[1]
-        Users = {'User: ', 'IP: '}
+        Users = {'USER':'', 'IP':'', 'EXPIRES':''}
         print("Client_IP: ", IP + "\t", "Client_Port: ", PORT)
-        self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
 
-        for line in self.rfile:
-            line = line.decode('utf-8')
-            line = line.split(' ')
-            Method = line[0]
-            if Method == 'REGISTER':
-                User = line[1].split(':')[1]
-                SIP = line[-1]
-                Users['IP'] = IP
-                Users['User'] = User
-                print(Users)
+        Lineas = self.rfile.read()
+        Lineas = Lineas.decode('utf-8')
+        Info = Lines.split()
+        METHOD = Info[0]
+        USER = Info[1].split(':')[1]
+        EXPIRES = Info[-1]
+            
+        if Method == 'REGISTER':
+            Users['User'] = User
+            Users['IP'] = IP
+            Users['Expires'] = EXPIRES
+                
+        if int(EXPIRES) == 0:
+            del Users['USER']
+            print(Users)
+            self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
+        else:
+            print(Users)
 
 
 if __name__ == "__main__":
-    # Listens at localhost ('') port 6001
-    # and calls the EchoHandler class to manage the request
+
+
     serv = socketserver.UDPServer(('', PORT), SIPRegistrerHandler)
 
     print("\n" + "Lanzando servidor UDP de eco LOCAL - PUERTO: " +
