@@ -16,18 +16,18 @@ except IndexError:
 
 Time = '%Y-%m-%d %H:%M:%S'
 
-class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
-    
 
+class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
     List = []
-    Users = {}  
-    
+    Users = {}
 
     def json2registered(self):
+
         try:
             with open("registered.json", "r") as jsonfile:
                 self.Users = json.load(jsonfile)
                 print(self.Users)
+
         except:
             pass
 
@@ -35,12 +35,12 @@ class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
 
         with open("registered.json", "w") as jsonfile:
             json.dump(self.Users, jsonfile, indent=3)
-   
+
     def handle(self):
         self.json2registered()
         IP = self.client_address[0]
         PORT = self.client_address[1]
-        Users = {'USER':'', 'IP':'', 'EXPIRES':''}
+        Users = {'USER': '', 'IP': '', 'EXPIRES': ''}
         print("Client_IP: ", IP + "\t", "Client_Port: ", PORT)
 
         Lineas = self.rfile.read()
@@ -49,19 +49,19 @@ class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
         METHOD = Info[0]
         USER = Info[1].split(':')[1]
         EXPIRES = Info[-1]
-            
+
         if Method == 'REGISTER':
-            try:                
-            
+            try:
+
                 if (EXPIRES) == 0:
                     del self.Users['USER']
                     self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
                 else:
-                    EXPIRES = datetime.now() + timedelta(seconds = EXPIRES)
+                    EXPIRES = datetime.now() + timedelta(seconds=EXPIRES)
                     Date = EXPIRES.strftime(Time)
                     self.Users[USER] = [str(IP), Date]
                     self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
-             
+
             except KeyError:
                 print("No User registered")
         for user in self.Users:
@@ -71,9 +71,9 @@ class SIPRegistrerHandler(socketserver.DatagramRequestHandler):
                 del self.Users[USER]
         print(self.Users)
         self.register2_json()
+
+
 if __name__ == "__main__":
-
-
     serv = socketserver.UDPServer(('', PORT), SIPRegistrerHandler)
     print("\n" + "Lanzando servidor UDP de eco LOCAL - PUERTO: " +
           str(PORT) + "\n")
